@@ -6,53 +6,84 @@
 <title>Inferium - Java Arguments</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: #0d0d0d; color: #ece0c8; font-family: "Bahnschrift", "Segoe UI", sans-serif;
-         min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px;
-         background-image: radial-gradient(ellipse 60% 50% at 50% 110%, rgba(204,150,62,.18), transparent); }
-  .card { max-width: 860px; width: 100%; text-align: center; }
-  .kicker { color: #d2a86e; letter-spacing: 3px; font-size: 13px; margin-bottom: 10px; }
-  h1 { color: #ffa832; font-size: 30px; letter-spacing: 2px; margin-bottom: 6px;
-       text-shadow: 2px 2px 0 #5a3208; }
-  .sub { color: #c8bca0; font-size: 15px; margin-bottom: 26px; }
-  .args { background: #141416; border: 1px solid #4a3418; border-radius: 10px; padding: 18px 20px;
-          font-family: Consolas, monospace; font-size: 14px; color: #ffb066; text-align: left;
-          word-break: break-all; line-height: 1.7; margin-bottom: 22px; user-select: all; cursor: pointer; }
-  button { background: linear-gradient(#ffc862, #cc942c); color: #2c1c0a; border: 3px solid #3a2810;
-           border-radius: 12px; font-family: inherit; font-weight: 700; font-size: 20px;
-           letter-spacing: 1px; padding: 14px 46px; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.5); }
-  button:hover { filter: brightness(1.07); }
-  .ok { display: none; color: #7fd98a; font-size: 16px; margin-top: 14px; }
-  .steps { color: #a89878; font-size: 14px; margin-top: 26px; line-height: 1.9; }
-  .steps b { color: #d2a86e; }
+  html, body { height: 100%; }
+  body { background: #0d0d0d; color: #ece0c8; font-family: "Bahnschrift", "Segoe UI", Arial, sans-serif;
+         min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 28px;
+         overflow-x: hidden;
+         background-image:
+           radial-gradient(ellipse 62% 46% at 50% 112%, rgba(255,140,55,.16), transparent),
+           radial-gradient(ellipse 46% 34% at 50% -6%, rgba(204,150,62,.10), transparent); }
+  .card { max-width: 880px; width: 100%; text-align: center; position: relative; z-index: 2; }
+  .crown { height: 118px; margin-bottom: 4px; image-rendering: pixelated; }
+  .kicker { color: #d2a86e; letter-spacing: 4px; font-size: 12px; margin: 6px 0 18px; }
+  .title { max-width: 480px; width: 82%; margin-bottom: 10px; }
+  .sub { color: #c8bca0; font-size: 15px; margin-bottom: 28px; }
+  .args { background: rgba(20,20,22,.92); border: 1px solid #4a3418; border-radius: 12px;
+          padding: 18px 22px; font-family: Consolas, monospace; font-size: 13.5px; color: #ffb066;
+          text-align: left; word-break: break-all; line-height: 1.75; margin-bottom: 26px;
+          user-select: all; cursor: pointer; box-shadow: 0 8px 28px rgba(0,0,0,.55),
+          inset 0 0 40px rgba(204,150,62,.05); }
+  .args:hover { border-color: #6a4a20; }
+  .btn { border: 0; background: none; padding: 0; cursor: pointer; line-height: 0; }
+  .btn img { width: 420px; max-width: 92%; transition: filter .12s, transform .12s; }
+  .btn:hover img { filter: brightness(1.08); transform: translateY(-1px); }
+  .btn:active img { transform: translateY(1px); }
+  .ok { visibility: hidden; color: #8fdd96; font-size: 16px; margin-top: 16px; letter-spacing: .5px; }
+  .steps { color: #a89878; font-size: 14px; margin-top: 30px; line-height: 2.0; }
+  .steps b { color: #e8c380; }
+  .ember { position: fixed; bottom: -12px; border-radius: 50%; background: #ffbe6e;
+           box-shadow: 0 0 8px 2px rgba(255,160,60,.55); opacity: 0; z-index: 1;
+           animation: rise linear infinite; pointer-events: none; }
+  @keyframes rise {
+    0%   { transform: translateY(0) translateX(0); opacity: 0; }
+    8%   { opacity: .85; }
+    100% { transform: translateY(-105vh) translateX(var(--dx)); opacity: 0; }
+  }
 </style>
 </head>
 <body>
 <div class="card">
-  <div class="kicker">INFERIUM - THE DRAGON'S AWAKENING RPG</div>
-  <h1>JAVA ARGUMENTS</h1>
+  <img class="crown" src="https://cdn.jsdelivr.net/gh/Bosko18/inferium-assets@v37/logo_crown.webp" alt="Inferium crown">
+  <div class="kicker">INFERIUM &nbsp;·&nbsp; THE DRAGON'S AWAKENING RPG</div>
+  <img class="title" src="https://cdn.jsdelivr.net/gh/Bosko18/inferium-assets@v37/title_args.png" alt="Java arguments">
   <div class="sub">Tuned G1 flags - smoother chunk loading, no GC stutter.</div>
-  <div class="args" id="args" onclick="copyArgs()">-XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:MaxGCPauseMillis=40 -XX:G1HeapRegionSize=16M -XX:G1NewSizePercent=25 -XX:G1ReservePercent=20 -XX:G1MixedGCCountTarget=3 -XX:InitiatingHeapOccupancyPercent=20 -XX:+AlwaysPreTouch -XX:+PerfDisableSharedMem -XX:+DisableExplicitGC</div>
-  <button onclick="copyArgs()">COPY TO CLIPBOARD</button>
-  <div class="ok" id="ok">Copied! Now paste it in the CurseForge app.</div>
+  <div class="args" id="args" onclick="copyArgs()" title="Click to copy">-XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:MaxGCPauseMillis=40 -XX:G1HeapRegionSize=16M -XX:G1NewSizePercent=25 -XX:G1ReservePercent=20 -XX:G1MixedGCCountTarget=3 -XX:InitiatingHeapOccupancyPercent=20 -XX:+AlwaysPreTouch -XX:+PerfDisableSharedMem -XX:+DisableExplicitGC</div>
+  <button class="btn" onclick="copyArgs()" aria-label="Copy to clipboard">
+    <img src="https://cdn.jsdelivr.net/gh/Bosko18/inferium-assets@v37/btn_copybig.png" alt="Copy to clipboard">
+  </button>
+  <div class="ok" id="ok">&#10003;&nbsp; Copied! Now paste it in the CurseForge app.</div>
   <div class="steps">
     <b>Where to paste:</b> CurseForge app &nbsp;&rsaquo;&nbsp; right-click Inferium &nbsp;&rsaquo;&nbsp;
-    <b>Settings</b> &nbsp;&rsaquo;&nbsp; Java tab &nbsp;&rsaquo;&nbsp; <b>Additional Java Arguments</b> &nbsp;&rsaquo;&nbsp; paste &amp; play.
+    <b>Settings</b> &nbsp;&rsaquo;&nbsp; Java tab &nbsp;&rsaquo;&nbsp; <b>Additional Java Arguments</b>
+    &nbsp;&rsaquo;&nbsp; paste &amp; play.
   </div>
 </div>
 <script>
-function copyArgs() {
-  var t = document.getElementById("args").textContent;
-  function done() { document.getElementById("ok").style.display = "block"; }
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(t).then(done).catch(fallback);
-  } else { fallback(); }
-  function fallback() {
-    var r = document.createRange();
-    r.selectNodeContents(document.getElementById("args"));
-    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
-    try { document.execCommand("copy"); done(); } catch (e) {}
+  // braises qui montent, deterministes et discretes
+  for (var k = 0; k < 16; k++) {
+    var e = document.createElement("div");
+    e.className = "ember";
+    var sz = 2 + (k * 37 % 4);
+    e.style.width = sz + "px"; e.style.height = sz + "px";
+    e.style.left = ((k * 61) % 100) + "vw";
+    e.style.setProperty("--dx", (((k * 29) % 60) - 30) + "px");
+    e.style.animationDuration = (7 + (k * 53 % 70) / 10) + "s";
+    e.style.animationDelay = (-(k * 71 % 90) / 10) + "s";
+    document.body.appendChild(e);
   }
-}
+  function copyArgs() {
+    var t = document.getElementById("args").textContent;
+    function done() { document.getElementById("ok").style.visibility = "visible"; }
+    function fallback() {
+      var r = document.createRange();
+      r.selectNodeContents(document.getElementById("args"));
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      try { document.execCommand("copy"); done(); } catch (e) {}
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(t).then(done).catch(fallback);
+    } else { fallback(); }
+  }
 </script>
 </body>
 </html>
